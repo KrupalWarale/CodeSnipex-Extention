@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeQuest Options</title>
+  <link rel="stylesheet" href="tailwind.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="container mx-auto py-8 px-4 max-w-2xl">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-indigo-700">CodeSnipex Settings</h1>
+      <p class="text-gray-600 mt-2">Configure your extension preferences</p>
+    </header>
+
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <h2 class="text-xl font-medium text-gray-900 mb-4">API Configuration</h2>
+      
+      <!-- Model Selection -->
+      <div class="mb-6">
+        <label for="modelSelect" class="block text-sm font-medium text-gray-700 mb-1">
+          AI Model
+        </label>
+        <div class="mt-1">
+          <select 
+            id="modelSelect" 
+            class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
+          >
+            <option value="GEMINI_25_FLASH">Gemini 2.5 Flash</option>
+            <option value="GEMINI_20_FLASH">Gemini 2.0 Flash</option>
+            <option value="GEMINI_20_FLASH_LITE">Gemini 2.0 Flash Lite</option>
+            <option value="GEMINI_15_FLASH">Gemini 1.5 Flash</option>
+            <option value="GEMINI_15_FLASH_8B">Gemini 1.5 Flash 8B</option>
+          </select>
+        </div>
+        <p class="mt-2 text-sm text-gray-500">
+          Select which AI model to use for generating questions
+        </p>
+      </div>
+      
+      <!-- Gemini API Key -->
+      <div class="mb-6" id="geminiKeySection">
+        <label for="geminiKey" class="block text-sm font-medium text-gray-700 mb-1">
+          Gemini API Key
+        </label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <input
+            type="password"
+            name="geminiKey"
+            id="geminiKey"
+            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md p-2 border"
+            placeholder="Enter your Gemini API key"
+          >
+          <button id="toggleGeminiVisibility" type="button" aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+        </div>
+        <p class="mt-2 text-sm text-gray-500">
+          Your API key is stored locally and is never sent to our servers.
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-500">
+            Get a Gemini API key
+          </a>
+        </p>
+      </div>
+
+      <div class="flex justify-end">
+        <button
+          id="saveBtn"
+          type="button"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Save Settings
+        </button>
+      </div>
+    </div>
+
+    <div id="savedNotification" class="mt-4 p-3 bg-green-100 text-green-800 rounded-md hidden">
+      Settings saved successfully!
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="options.js"></script>
+</body>
+</html> 

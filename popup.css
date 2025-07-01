@@ -1,0 +1,228 @@
+/* Custom styles for popup */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  letter-spacing: -0.025em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Advanced Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-20px) scale(0.95); opacity: 0; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 2s linear infinite;
+}
+
+.tab-content {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.question-card {
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+.question-card:nth-child(1) { animation-delay: 0.05s; }
+.question-card:nth-child(2) { animation-delay: 0.1s; }
+.question-card:nth-child(3) { animation-delay: 0.15s; }
+
+/* Enhanced Tab Styles */
+.tab-button {
+  position: relative;
+  transition: all 0.3s ease;
+  will-change: transform, color;
+  z-index: 20;
+}
+
+.tab-button:not(.active):hover {
+  background-color: rgba(79, 70, 229, 0.05);
+  transform: translateY(-2px);
+}
+
+.tab-button.active {
+  color: #4f46e5;
+  border-color: #4f46e5;
+  font-weight: 600;
+}
+
+/* Refined Question Card Styles */
+.answer-reveal {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.answer-reveal.show {
+  max-height: 500px;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Enhanced MCQ Option Styles */
+.mcq-option {
+  border: 1.5px solid #e5e7eb;
+  transition: all 0.3s ease;
+  will-change: transform, border-color, background-color;
+  position: relative;
+  z-index: 10;
+}
+
+.mcq-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.mcq-option.selected {
+  border-color: #6366f1;
+  background-color: rgba(99, 102, 241, 0.05);
+}
+
+.mcq-option.correct {
+  background-color: #d1fae5;
+  border-color: #10b981;
+}
+
+.mcq-option.incorrect {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+}
+
+/* Advanced Code Snippet Styling */
+#codeSnippet {
+  font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+  line-height: 1.6;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.5) transparent;
+}
+
+/* Settings Button Enhanced Hover */
+#settingsBtn {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  will-change: transform, background-color;
+  z-index: 30;
+}
+
+#settingsBtn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(243, 244, 246, 0.6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4338CA 0%, #7C3AED 100%);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #4F46E5 0%, #7E22CE 100%);
+}
+
+/* Tailwind Utility Fixes and Enhancements */
+.border-gray-300 {
+  border-color: #e5e7eb;
+}
+
+.focus\:ring-indigo-500:focus {
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+
+.focus\:border-indigo-500:focus {
+  border-color: #6366f1;
+}
+
+/* Fix clickable elements */
+button, a, input, label, .tab-button, .clickable {
+  position: relative;
+  z-index: 20 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Fix potential overlapping issues */
+.fixed, .absolute {
+  pointer-events: none;
+}
+
+.fixed *, .absolute * {
+  pointer-events: auto;
+}
+
+/* Fix buttons in popup and side panel */
+#modelSelectorBtn, #refreshBtn, #settingsBtn, #generateBtn, 
+#retryBtn, #sidePanelBtn, #settingsFromErrorBtn {
+  z-index: 100;
+  position: relative;
+}
+
+/* Make dropdowns appear above other content */
+.dropdown-menu {
+  z-index: 1000 !important;
+}
+
+/* Ensure backdrop elements don't block interaction */
+.backdrop-blur-sm, .bg-opacity-50, .bg-opacity-25, .bg-opacity-75 {
+  pointer-events: auto !important;
+}
+
+/* Add debug mode */
+.debug-mode button, 
+.debug-mode .tab-button, 
+.debug-mode a {
+  outline: 1px dashed red;
+}
+
+/* Fix for card containers */
+.practice-question, .mcq {
+  position: relative;
+}
+
+.practice-question button, 
+.mcq button,
+.practice-question label,
+.mcq label,
+.practice-question input,
+.mcq input {
+  position: relative;
+  z-index: 25;
+}
+
+/* Ensure navigation buttons work */
+.question-nav button {
+  z-index: 30;
+  position: relative;
+}
+
+/* Add consistent hover effect for all buttons */
+button:hover, .tab-button:hover, .clickable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+} 

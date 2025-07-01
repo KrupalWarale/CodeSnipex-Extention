@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeSnipex</title>
+  <link rel="stylesheet" href="tailwind.min.css">
+  <link rel="stylesheet" href="popup.css">
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(-20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .animate-spin {
+      animation: spin 0.8s linear infinite;
+    }
+    
+    .gradient-primary {
+      background: linear-gradient(135deg, #4338CA 0%, #7C3AED 100%);
+    }
+    
+    .gradient-secondary {
+      background: linear-gradient(135deg, #4F46E5 0%, #7E22CE 100%);
+    }
+    
+    .gradient-success {
+      background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+    }
+    
+    .gradient-error {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    }
+    
+    .glass-effect {
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+    
+    .hover-scale {
+      transition: all 0.2s ease;
+    }
+    
+    .hover-scale:hover {
+      transform: scale(1.02);
+      box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .answer-feedback {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.1),
+        0 5px 10px rgba(0, 0, 0, 0.05);
+      z-index: 50;
+      animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .feedback-correct {
+      background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feedback-incorrect {
+      background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+    
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .animate-slide-in {
+      animation: slideIn 0.3s ease-out;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(243, 244, 246, 0.8);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #4338CA 0%, #7C3AED 100%);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #4F46E5 0%, #7E22CE 100%);
+    }
+
+    /* Custom icon styling */
+    .app-icon {
+      background: linear-gradient(135deg, #4338CA 0%, #7C3AED 100%);
+      border-radius: 1.5rem;
+      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 10px 15px -3px rgba(99, 102, 241, 0.3),
+        0 4px 6px -2px rgba(99, 102, 241, 0.2);
+    }
+
+    .app-icon svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: white;
+    }
+    
+    /* Model selector styling */
+    #modelSelectorBtn {
+      font-size: 0.75rem;
+      padding: 0.375rem 0.5rem;
+      border-radius: 0.5rem;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(79, 70, 229, 0.1);
+      z-index: 100;
+      position: relative;
+    }
+    
+    #modelSelectorBtn:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    #modelDropdown {
+      border: 1px solid rgba(79, 70, 229, 0.1);
+      max-height: 250px;
+      overflow-y: auto;
+      top: 100%;
+      margin-top: 5px;
+      right: 0;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      border-radius: 0.5rem;
+      z-index: 1000;
+      position: absolute;
+    }
+    
+    #modelDropdown button {
+      position: relative;
+    }
+    
+    #modelDropdown button:hover::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: linear-gradient(135deg, #4338CA 0%, #7C3AED 100%);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 w-96">
+  <div class="container mx-auto p-3">
+    <header class="mb-4 animate-fade-in">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="app-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-purple-700">CodeSnipex</h1>
+            <p class="text-sm text-indigo-600 mt-0.5 animate-slide-in font-medium">Transform code into learning</p>
+          </div>
+        </div>
+        <div class="flex space-x-2">
+          <div class="relative">
+            <button id="modelSelectorBtn" aria-label="Select Model" class="flex items-center px-3 py-1 rounded-full bg-white/50 hover:bg-white/80 border border-indigo-100 shadow-sm text-xs text-indigo-700 font-medium transition-all duration-200 hover:shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span id="currentModelLabel">2.5 Flash</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div id="modelDropdown" class="absolute right-0 mt-1 bg-white shadow-lg rounded-lg hidden z-10 w-44 py-1 animate-fade-in glass-effect">
+              <!-- Options will be populated by JavaScript -->
+            </div>
+          </div>
+          
+          <button id="refreshBtn" aria-label="Refresh Results" class="p-2 rounded-full hover:bg-white/50 transition-all duration-200 hover:shadow-md backdrop-blur-sm text-indigo-600 group relative">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+              Regenerate with current model
+            </span>
+          </button>
+          
+          <button id="sidePanelBtn" aria-label="Open Side Panel" class="p-2 rounded-full hover:bg-white/50 transition-all duration-200 hover:shadow-md backdrop-blur-sm text-indigo-600 group relative">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+            <span class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+              Open in side panel
+            </span>
+          </button>
+          
+          <button id="settingsBtn" aria-label="Settings" class="p-2 rounded-full hover:bg-white/50 transition-all duration-200 hover:shadow-md backdrop-blur-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Loading state -->
+    <div id="loadingState" class="flex flex-col items-center justify-center py-6 hidden animate-fade-in">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <p class="mt-4 text-indigo-600 font-medium">Crafting your questions...</p>
+    </div>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="glass-effect rounded-xl p-5 text-center animate-fade-in hover-scale">
+      <div class="gradient-secondary p-3 rounded-full w-16 h-16 mx-auto flex items-center justify-center shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+      </div>
+      <h2 class="mt-4 text-lg font-medium text-indigo-900">Ready to Learn</h2>
+      <p class="mt-2 text-sm text-indigo-600">
+        Select code on any webpage and right-click to generate practice questions, or paste your code below.
+      </p>
+      
+      <div class="mt-4">
+        <textarea id="manualCodeInput" class="w-full p-3 text-sm border-0 rounded-lg shadow-inner bg-white/70 focus:ring-2 focus:ring-indigo-500 focus:bg-white/90 transition-all duration-200 placeholder-indigo-300 relative z-10" placeholder="Paste your code here..." rows="3"></textarea>
+        <button id="generateBtn" class="mt-3 w-full gradient-primary text-white py-2 px-4 rounded-lg hover:shadow-lg transition-all duration-200 font-medium text-shadow relative z-20">
+          Generate Questions
+        </button>
+      </div>
+    </div>
+
+    <!-- Code preview -->
+    <div id="codePreview" class="mt-3 hidden animate-fade-in">
+      <h3 class="text-sm font-medium text-indigo-700 mb-2">Selected Code:</h3>
+      <pre id="codeSnippet" class="bg-gray-900 text-gray-100 p-3 rounded-lg shadow-lg overflow-x-auto max-h-24 font-mono text-sm border border-gray-700"></pre>
+    </div>
+
+    <!-- Tabs -->
+    <div id="tabsContainer" class="mt-4 hidden animate-fade-in">
+      <div class="border-b border-indigo-100">
+        <nav class="flex -mb-px">
+          <button id="practiceQuestionsTab" class="tab-button active py-2 px-4 text-sm font-medium text-indigo-600 border-b-2 border-indigo-500 transition-all duration-200">
+            Syntax MCQs
+          </button>
+          <button id="mcqsTab" class="tab-button py-2 px-4 text-sm font-medium text-indigo-400 hover:text-indigo-600 border-b-2 border-transparent hover:border-indigo-300 transition-all duration-200">
+            Concept MCQs
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Practice Questions Content -->
+    <div id="practiceQuestionsContent" class="tab-content mt-3">
+      <div id="practiceQuestionsList" class="space-y-3"></div>
+      <div id="practiceQuestionsNav" class="flex justify-between mt-4 hidden">
+        <button id="prevPracticeQuestion" class="px-4 py-2 bg-white/80 hover:bg-white shadow-sm hover:shadow-md text-indigo-700 rounded-lg text-sm flex items-center transition-all duration-200 backdrop-blur-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Previous
+        </button>
+        <span id="practiceQuestionCounter" class="text-sm text-indigo-600 self-center font-medium"></span>
+        <button id="nextPracticeQuestion" class="px-4 py-2 bg-white/80 hover:bg-white shadow-sm hover:shadow-md text-indigo-700 rounded-lg text-sm flex items-center transition-all duration-200 backdrop-blur-sm">
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- MCQs Content -->
+    <div id="mcqsContent" class="tab-content mt-3 hidden">
+      <div id="mcqsList" class="space-y-4"></div>
+      <div id="mcqsNav" class="flex justify-between mt-4 hidden">
+        <button id="prevMcq" class="px-4 py-2 bg-white/80 hover:bg-white shadow-sm hover:shadow-md text-indigo-700 rounded-lg text-sm flex items-center transition-all duration-200 backdrop-blur-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Previous
+        </button>
+        <span id="mcqCounter" class="text-sm text-indigo-600 self-center font-medium"></span>
+        <button id="nextMcq" class="px-4 py-2 bg-white/80 hover:bg-white shadow-sm hover:shadow-md text-indigo-700 rounded-lg text-sm flex items-center transition-all duration-200 backdrop-blur-sm">
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Error state -->
+    <div id="errorState" class="mt-3 p-4 bg-red-50/90 backdrop-blur-sm text-red-800 rounded-xl shadow-lg hidden animate-fade-in border border-red-100">
+      <h3 class="font-medium">Error generating questions</h3>
+      <p id="errorMessage" class="text-sm mt-1">Something went wrong. Please try again.</p>
+      
+      <div class="mt-3 text-sm">
+        <p>Common issues:</p>
+        <ul class="list-disc pl-5 mt-1">
+          <li>API key might be invalid or expired</li>
+          <li>API key might have reached its quota limit</li>
+          <li>Network connectivity issues</li>
+        </ul>
+      </div>
+      
+      <div class="flex mt-4">
+        <button id="retryBtn" class="text-sm gradient-error text-white py-2 px-4 rounded-lg transition-all duration-200 mr-2 hover:shadow-md font-medium">
+          Try Again
+        </button>
+        <button id="settingsFromErrorBtn" class="text-sm bg-gray-100/80 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-lg transition-all duration-200 hover:shadow-md backdrop-blur-sm">
+          Open Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html> 
